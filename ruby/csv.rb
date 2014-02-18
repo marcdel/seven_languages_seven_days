@@ -5,20 +5,6 @@ module ActsAsCsv
     base.extend ClassMethods
   end
 
-  class CsvRow
-    attr_accessor :headers, :csv_contents
-
-    def initialize(headers, row)
-      @headers = headers
-      @row = row
-    end
-
-    def method_missing(name, *args)
-      index = @headers.find_index(name.to_s)
-      @row[index]
-    end
-  end
-
   module ClassMethods
     def acts_as_csv
       include InstanceMethods
@@ -43,11 +29,25 @@ module ActsAsCsv
         block.call csv_row
       end
     end
-    
+
     attr_accessor :headers, :csv_contents
     def initialize
       read 
     end
+  end
+end
+
+class CsvRow
+  attr_accessor :headers, :csv_contents
+
+  def initialize(headers, row)
+    @headers = headers
+    @row = row
+  end
+
+  def method_missing(name, *args)
+    index = @headers.find_index(name.to_s)
+    @row[index]
   end
 end
 
